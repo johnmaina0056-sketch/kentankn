@@ -30,6 +30,19 @@ body{
     overflow-x:hidden;
     padding: 2%;
 }
+
+.qty-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+#qtyAmount{
+    font-size:20px;
+    font-weight:700;
+    color:#000;
+}
 /* =========================
 OVERLAY (HIDDEN BY DEFAULT FIX)
 ========================= */
@@ -1542,28 +1555,65 @@ MOBILE
     }
 
 }
-
 .hero{
-    position:relative;
-    min-height:650px;
-    display:flex;
-    align-items:center;
-    color:#fff;
-    padding:0 10%;
-    overflow:hidden;
+    position: relative;
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    padding: 0 10%;
+    overflow: hidden;
+
+    /* ✅ BACKGROUND IMAGE FIX */
+    background-image: url("bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-/* Gradient background layer (animated via JS variable) */
+/* ✅ DARK OVERLAY (DO NOT BLOCK IMAGE) */
 .hero::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: var(--bg, linear-gradient(90deg,#02162e,#14386d));
-    z-index:0;
-    transition: opacity 0.8s ease, background 0.8s ease;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45); /* adjust darkness here */
+    z-index: 1;
+}
+
+/* ✅ HERO CONTENT ABOVE OVERLAY */
+.hero-content{
+    position: relative;
+    z-index: 2;
+}
+
+/* =========================
+   ARROWS / CONTROLS SAFETY
+========================= */
+.hero .arrow,
+.slider-dots{
+    position: relative;
+    z-index: 3;
+}
+
+/* =========================
+   MOBILE RESPONSIVE FIX
+========================= */
+@media (max-width: 768px){
+
+    .hero{
+        min-height: 500px;
+        padding: 0 6%;
+        background-position: center top; /* better crop for phones */
+    }
+
+    .hero-content h1{
+        font-size: 22px;
+        line-height: 1.3;
+    }
+
+    .hero-content p{
+        font-size: 14px;
+    }
 }
 
 /* content sits above background */
@@ -1596,9 +1646,10 @@ MOBILE
 }
 
 .hero p{
-    color:#d8d8d8;
+    color:#fff6f6;
     line-height:1.8;
     margin-bottom:30px;
+    font-weight: 400;
     position:relative;
     z-index:1;
 }
@@ -1606,6 +1657,7 @@ MOBILE
 .hero-buttons{
     display:flex;
     gap:15px;
+    color: #000;
     position:relative;
     z-index:1;
 }
@@ -1781,7 +1833,7 @@ MOBILE
     <div class="sidebar-header">
 
         <div class="sidebar-logo">
-            TOP<span>TANK</span>
+            KEN<span>TANK</span>
         </div>
 
         <button class="close-btn" id="closeBtn">
@@ -1829,15 +1881,19 @@ MOBILE
 <div class="overlay" id="overlay"></div>
 
 
-<section class="hero" id="hero">
+<section class="hero" style="color: #000;" id="hero">
 
+
+
+    
     <!-- LEFT ARROW -->
     <button class="arrow left" onclick="prevSlide()">
         &#10094;
     </button>
 
+
     <!-- CONTENT -->
-    <div class="hero-content">
+    <div style="color: #000;" class="hero-content" >
 
         <small id="heroTag">
             KENYA'S #1 WATER STORAGE SOLUTION
@@ -3436,9 +3492,9 @@ order
 
       <div>
 
-        <div style="border-left:4px solid #f4a900;padding:15px;margin-bottom:15px;background:#fafafa;">
-          📞0736 066 663
-        </div>
+        <div style="border-left:4px solid #f4a900;padding:15px;margin-bottom:15px;background:#fafafa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+  📞 0736 066 663
+</div>
 
        
 
@@ -4205,7 +4261,6 @@ function closeSidebar(){
 }
 
 </script>
-
 <script>
 
 const slides = [
@@ -4214,28 +4269,28 @@ const slides = [
     tag: "KENYA'S #1 WATER STORAGE SOLUTION",
     title: "KWA MAHITAJI YAKO <span>YOTE YA MAJI</span>",
     text: "DOUBLE-layered, UV-protected tanks 100L–24,000L. Food-grade polyethylene. Made in Kenya.",
-    bg: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"
+    bg: "bg.png"
 },
 
 {
     tag: "QUALITY WATER TANKS",
     title: "UHIFADHI <span>BORA WA MAJI</span>",
     text: "Premium quality tanks for homes, schools, institutions and businesses.",
-    bg: "linear-gradient(135deg, #1f4037, #99f2c8)"
+    bg: "bg.png"
 },
 
 {
     tag: "AGRICULTURAL SOLUTIONS",
     title: "TANKS ZA <span>KILIMO</span>",
     text: "Reliable water storage solutions for irrigation and livestock farming.",
-    bg: "linear-gradient(135deg, #b92b27, #1565c0)"
+    bg: "bg.png"
 },
 
 {
-    tag: "FREE DELIVERY",
+    tag: "FREE DELIVERY ACROSS KENYA",
     title: "TUNAFIKISHA <span>NCHI NZIMA</span>",
     text: "Fast and secure delivery across Kenya with professional support.",
-    bg: "linear-gradient(135deg, #232526, #414345)"
+    bg: "bg.png"
 }
 
 ];
@@ -4248,7 +4303,7 @@ const heroTitle = document.getElementById("heroTitle");
 const heroText = document.getElementById("heroText");
 const dots = document.querySelectorAll(".dot");
 
-function showSlide(index){
+function showSlide(index) {
 
     currentSlide = index;
 
@@ -4258,37 +4313,32 @@ function showSlide(index){
     heroTitle.innerHTML = slide.title;
     heroText.innerHTML = slide.text;
 
-    // ✅ CLEAN: use CSS variable for smooth gradient
-    hero.style.setProperty("--bg", slide.bg);
+    // ✅ background image (bg.png)
+    hero.style.background = `url('${slide.bg}') center/cover no-repeat`;
 
     dots.forEach(dot => dot.classList.remove("active"));
     if (dots[index]) dots[index].classList.add("active");
 }
 
-function nextSlide(){
+function nextSlide() {
     currentSlide = (currentSlide + 1) % slides.length;
     showSlide(currentSlide);
 }
 
-function prevSlide(){
+function prevSlide() {
     currentSlide = (currentSlide - 1 + slides.length) % slides.length;
     showSlide(currentSlide);
 }
 
-function goToSlide(index){
+function goToSlide(index) {
     showSlide(index);
 }
 
-/* Auto slideshow every 5 seconds */
 setInterval(nextSlide, 5000);
 
-/* init first slide */
 showSlide(0);
 
-
-
 </script>
-
 <script>
 function updateTime() {
     const now = new Date();
@@ -4354,8 +4404,13 @@ function closeOrderModal() {
 function changeQty(change) {
     quantity += change;
     if (quantity < 1) quantity = 1;
+
     document.getElementById("qtyDisplay").innerText = quantity;
+
+    updateSummaryTotal();
 }
+
+
 
 /* =========================
    WHATSAPP ORDER SUBMISSION
@@ -4375,7 +4430,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const total = quantity * cleanPrice;
 
         const message =
-`🛒 *New Order – TopTank Kenya*
+`🛒 *New Order – KenTank Kenya*
 
 *Product:* ${orderProduct}
 *Capacity:* ${orderCapacity}
@@ -4388,7 +4443,7 @@ document.addEventListener("DOMContentLoaded", function () {
 *Delivery Location:* ${location}
 *Notes:* ${notes || "None"}
 
-_Order placed via TopTank Kenya website_`;
+_Order placed via KenTank Kenya website_`;
 
         const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
@@ -4402,6 +4457,57 @@ _Order placed via TopTank Kenya website_`;
 
 });
 
+
+function updateSummaryTotal() {
+
+    const cleanPrice = parseInt(orderPrice.toString().replace(/,/g, ""));
+    const total = quantity * cleanPrice;
+
+    // unit price
+    document.getElementById("summaryPrice").innerText =
+        "KSh " + cleanPrice.toLocaleString();
+
+    // amount beside quantity selector
+    document.getElementById("qtyAmount").innerText =
+        "KSh " + total.toLocaleString();
+
+    let totalRow = document.getElementById("summaryTotalRow");
+
+    if (!totalRow) {
+        totalRow = document.createElement("div");
+        totalRow.id = "summaryTotalRow";
+        totalRow.className = "summary-row";
+
+        totalRow.innerHTML = `
+            <span>Total</span>
+            <strong id="summaryTotal"></strong>
+        `;
+
+        document.querySelector(".order-summary").appendChild(totalRow);
+    }
+
+    document.getElementById("summaryTotal").innerText =
+        "KSh " + total.toLocaleString();
+}
+function openOrderModal(product, capacity, price) {
+
+    orderProduct = product;
+    orderCapacity = capacity;
+    orderPrice = price;
+
+    document.getElementById("summaryProduct").innerText = product;
+    document.getElementById("summaryCapacity").innerText = capacity;
+
+    quantity = 1;
+    document.getElementById("qtyDisplay").innerText = quantity;
+
+    document.getElementById("summaryPrice").innerText =
+        "KSh " + parseInt(price).toLocaleString();
+
+    document.getElementById("orderModal").style.display = "flex";
+
+    updateSummaryTotal(); // 🔥 IMPORTANT
+}
 </script>
 <!-- CALL BUTTON -->
 <a href="tel:+254736066663" class="call-btn">
@@ -4457,15 +4563,19 @@ _Order placed via TopTank Kenya website_`;
         <form id="orderForm">
 
             <!-- QUANTITY -->
-            <div class="quantity-box">
-                <label>Quantity</label>
+           <div class="quantity-box">
+    <label>Quantity</label>
 
-                <div class="qty-controls">
-                    <button type="button" onclick="changeQty(-1)">−</button>
-                    <span id="qtyDisplay">1</span>
-                    <button type="button" onclick="changeQty(1)">+</button>
-                </div>
-            </div>
+    <div class="qty-row">
+        <div class="qty-controls">
+            <button type="button" onclick="changeQty(-1)">−</button>
+            <span id="qtyDisplay">1</span>
+            <button type="button" onclick="changeQty(1)">+</button>
+        </div>
+
+        <strong id="qtyAmount">KSh 8,500</strong>
+    </div>
+</div>
 
             <!-- INPUTS -->
             <input type="text" id="customerName" placeholder="Full Name" required>
